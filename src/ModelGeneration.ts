@@ -8,6 +8,7 @@ import IConnectionOptions from "./IConnectionOptions";
 import IGenerationOptions, { eolConverter } from "./IGenerationOptions";
 import { Entity } from "./models/Entity";
 import { Relation } from "./models/Relation";
+import { createModuleResolutionCache } from "typescript";
 
 const prettierOptions: Prettier.Options = {
     parser: "typescript",
@@ -25,24 +26,210 @@ export default function modelGenerationPhase(
     if (!fs.existsSync(resultPath)) {
         fs.mkdirSync(resultPath);
     }
-    let entitiesPath = resultPath;
+
+    // let entitiesPath = resultPath;
     if (!generationOptions.noConfigs) {
         const tsconfigPath = path.resolve(resultPath, "tsconfig.json");
         const typeormConfigPath = path.resolve(resultPath, "ormconfig.json");
 
         createTsConfigFile(tsconfigPath);
         createTypeOrmConfig(typeormConfigPath, connectionOptions);
+        /*
         entitiesPath = path.resolve(resultPath, "./entities");
         if (!fs.existsSync(entitiesPath)) {
             fs.mkdirSync(entitiesPath);
         }
+        */
     }
     if (generationOptions.indexFile) {
-        createIndexFile(databaseModel, generationOptions, entitiesPath);
+        // createIndexFile(databaseModel, generationOptions, entitiesPath);
     }
-    generateModels(databaseModel, generationOptions, entitiesPath);
+    // generateModels(databaseModel, generationOptions, entitiesPath);
+    generateResource(databaseModel, generationOptions, resultPath);
 }
 
+function generateResource(
+    databaseModel: Entity[],
+    generationOptions: IGenerationOptions,
+    resultPath: string
+) {
+    databaseModel.forEach((element) => {
+        const resourcePath = getResourcePath(
+            resultPath,
+            element,
+            generationOptions
+        );
+
+        createEntities(resourcePath, element, generationOptions);
+        createDtos(resourcePath, element, generationOptions);
+
+        createResource(resourcePath, element, generationOptions, "resolver");
+        createResource(
+            resourcePath,
+            element,
+            generationOptions,
+            "resolver.spec"
+        );
+        createResource(resourcePath, element, generationOptions, "service");
+        createResource(
+            resourcePath,
+            element,
+            generationOptions,
+            "service.spec"
+        );
+        createResource(resourcePath, element, generationOptions, "module");
+        createResource(resourcePath, element, generationOptions, "controller"); // make optional
+    });
+}
+
+function createResource(
+    resourcePath: string,
+    element,
+    generationOptions: IGenerationOptions,
+    resource: string
+) {
+    const compliedTemplate = getCompliedTemplate(resource);
+    const rendered = compliedTemplate(element);
+    const formatted = prettify(rendered, element);
+
+    const fileName = getFileName(element, generationOptions);
+    const filePath = path.resolve(resourcePath, `${fileName}.${resource}.ts`);
+    writeFile(filePath, formatted);
+}
+
+function createDtos(
+    resourcePath: string,
+    element,
+    generationOptions: IGenerationOptions
+) {
+    const folderPath = path.resolve(resourcePath, "./dto");
+    createFolder(folderPath);
+
+    const compliedTemplate = getCompliedTemplate("dto");
+    const rendered = compliedTemplate(element);
+    const withImportStatements = removeUnusedImports(
+        EOL !== eolConverter[generationOptions.convertEol]
+            ? rendered.replace(
+                  /(\r\n|\n|\r)/gm,
+                  eolConverter[generationOptions.convertEol]
+              )
+            : rendered
+    );
+    const formatted = prettify(withImportStatements, element);
+
+    const fileName = getFileName(element, generationOptions);
+    const dtoCFilePath = path.resolve(
+        folderPath,
+        `create-${fileName}.input.ts`
+    );
+    const dtoUFilePath = path.resolve(
+        folderPath,
+        `update-${fileName}.input.ts`
+    );
+    writeFile(dtoCFilePath, formatted);
+    writeFile(dtoUFilePath, formatted);
+}
+
+function createEntities(
+    resourcePath: string,
+    element,
+    generationOptions: IGenerationOptions
+) {
+    const folderPath = path.resolve(resourcePath, "./entities");
+    createFolder(folderPath);
+
+    const compliedTemplate = getCompliedTemplate("entity");
+
+    const rendered = compliedTemplate(element);
+    const withImportStatements = removeUnusedImports(
+        EOL !== eolConverter[generationOptions.convertEol]
+            ? rendered.replace(
+                  /(\r\n|\n|\r)/gm,
+                  eolConverter[generationOptions.convertEol]
+              )
+            : rendered
+    );
+    const formatted = prettify(withImportStatements, element);
+
+    const fileName = getFileName(element, generationOptions);
+    const filePath = path.resolve(folderPath, `${fileName}.entity.ts`);
+    writeFile(filePath, formatted);
+}
+
+function createFolder(folderPath: string) {
+    const entitiesPath = path.resolve(folderPath);
+    if (!fs.existsSync(entitiesPath)) {
+        fs.mkdirSync(entitiesPath);
+    }
+}
+
+function writeFile(filePath, formatted) {
+    fs.writeFileSync(filePath, formatted, {
+        encoding: "utf-8",
+        flag: "w",
+    });
+}
+function prettify(rendered, element) {
+    let formatted = "";
+    try {
+        formatted = Prettier.format(rendered, prettierOptions);
+    } catch (error) {
+        console.error(
+            "There were some problems with model generation for table: ",
+            element.sqlName
+        );
+        console.error(error);
+        formatted = rendered;
+    }
+    return formatted;
+}
+
+function getCompliedTemplate(templateName: string) {
+    const templatePath = path.resolve(
+        __dirname,
+        "templates",
+        `${templateName}.mst`
+    );
+    const template = fs.readFileSync(templatePath, "utf-8");
+    return Handlebars.compile(template, {
+        noEscape: true,
+    });
+}
+
+function getResourcePath(
+    resultPath: string,
+    element,
+    generationOptions: IGenerationOptions
+) {
+    const fileName = getFileName(element, generationOptions);
+    const resourcePath = path.resolve(resultPath, `./${fileName}`);
+    if (!fs.existsSync(resourcePath)) {
+        fs.mkdirSync(resourcePath);
+    }
+    return resourcePath;
+}
+
+function getFileName(element, generationOptions) {
+    let fileName = "";
+    switch (generationOptions.convertCaseFile) {
+        case "camel":
+            fileName = changeCase.camelCase(element.fileName);
+            break;
+        case "param":
+            fileName = changeCase.paramCase(element.fileName);
+            break;
+        case "pascal":
+            fileName = changeCase.pascalCase(element.fileName);
+            break;
+        case "none":
+            fileName = element.fileName;
+            break;
+        default:
+            throw new Error("Unknown case style");
+    }
+    return fileName;
+}
+/*
 function generateModels(
     databaseModel: Entity[],
     generationOptions: IGenerationOptions,
@@ -137,7 +324,7 @@ function createIndexFile(
         flag: "w",
     });
 }
-
+*/
 function removeUnusedImports(rendered: string) {
     const openBracketIndex = rendered.indexOf("{") + 1;
     const closeBracketIndex = rendered.indexOf("}");

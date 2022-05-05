@@ -23,13 +23,13 @@ export default interface IConnectionOptions {
 
 export function getDefaultConnectionOptions(): IConnectionOptions {
     const connectionOptions: IConnectionOptions = {
-        host: "127.0.0.1",
-        port: 0,
-        databaseNames: [""],
-        user: "",
-        password: "",
-        databaseType: undefined as any,
-        schemaNames: [""],
+        host: "localhost",
+        port: 5433,
+        databaseNames: ["scaffolding_tst"],
+        user: "postgres",
+        password: "postgres",
+        databaseType: "postgres",
+        schemaNames: ["public"],
         instanceName: undefined,
         ssl: false,
         skipTables: [],

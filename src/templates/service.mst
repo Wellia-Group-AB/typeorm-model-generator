@@ -1,0 +1,15 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AuthUser } from 'src/entities/auth-user';
+import { Repository } from 'typeorm';
+import { AbstractService } from 'src/commons/abstract.service';
+
+@Injectable()
+export class UsersService extends AbstractService {
+  constructor(
+    @InjectRepository(AuthUser)
+    private usersRepository: Repository<AuthUser>,
+  ) {
+    super(usersRepository);
+  }
+}

@@ -1,0 +1,35 @@
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { {{toEntityName tscName}}Service } from './{{tscName}}.service';
+import { {{toEntityName tscName}} } from './entities/{{tscName}}.entity';
+import { Create{{toEntityName tscName}}Input } from './dto/create-{{tscName}}.input';
+import { Update{{toEntityName tscName}}Input } from './dto/update-{{tscName}}.input';
+
+@Resolver(() => {{toEntityName tscName}})
+export class {{toEntityName tscName}}Resolver {
+  constructor(private readonly {{tscName}}Service: {{toEntityName tscName}}Service) {}
+
+  @Mutation(() => {{toEntityName tscName}})
+  create{{toEntityName tscName}}(@Args('create{{toEntityName tscName}}Input') create{{toEntityName tscName}}Input: Create{{toEntityName tscName}}Input) {
+    return this.{{tscName}}Service.create(create{{toEntityName tscName}}Input);
+  }
+
+  @Query(() => [{{toEntityName tscName}}], { name: '{{tscName}}' })
+  findAll() {
+    return this.{{tscName}}Service.findAll();
+  }
+
+  @Query(() => {{toEntityName tscName}}, { name: '{{tscName}}' })
+  findOne(@Args('id', { type: () => Int }) id: number) {
+    return this.{{tscName}}Service.findOne(id);
+  }
+
+  @Mutation(() => {{toEntityName tscName}})
+  update{{toEntityName tscName}}(@Args('update{{toEntityName tscName}}Input') update{{toEntityName tscName}}Input: Update{{toEntityName tscName}}Input) {
+    return this.{{tscName}}Service.update(update{{toEntityName tscName}}Input.id, update{{toEntityName tscName}}Input);
+  }
+
+  @Mutation(() => {{toEntityName tscName}})
+  remove{{toEntityName tscName}}(@Args('id', { type: () => Int }) id: number) {
+    return this.{{tscName}}Service.remove(id);
+  }
+}
