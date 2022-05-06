@@ -32,10 +32,10 @@ export const eolConverter = {
 
 export function getDefaultGenerationOptions(): IGenerationOptions {
     const generationOptions: IGenerationOptions = {
-        resultsPath: path.resolve(process.cwd(), "output"),
+        resultsPath: path.resolve(process.cwd(), "./output"),
         pluralizeNames: true,
         noConfigs: false,
-        convertCaseFile: "pascal",
+        convertCaseFile: "param",
         convertCaseEntity: "pascal",
         convertCaseProperty: "camel",
         convertEol: EOL === "\n" ? "LF" : "CRLF",

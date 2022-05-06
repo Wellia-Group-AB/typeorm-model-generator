@@ -1,0 +1,32 @@
+{{#*inline "Index"}}
+{{/inline}}
+{{#*inline "Import"}}
+{{/inline}}
+{{#*inline "Column"}}
+{{/inline}}
+{{#*inline "Relation"}}
+{{/inline}}
+{{#*inline "RelationId"}}
+{{/inline}}
+
+{{#*inline "Constructor"}}
+{{printPropertyVisibility}}constructor(init?: Partial<{{toEntityName entityName}}>) {
+    {{#activeRecord}}super();
+    {{/activeRecord}}Object.assign(this, init);
+}
+{{/inline}}
+{{#*inline "Entity"}}
+{{#indices}}{{> Index}}{{/indices~}}
+@InputType()
+export {{defaultExport}} class {{toEntityName updateName}} extends PartialType({{toEntityName createName}}) {
+
+{{#columns}}{{> Column}}{{/columns~}}
+{{#if generateConstructor}}{{>Constructor entityName=updateName}}{{/if~}}
+}
+{{/inline}}
+import { {{toEntityName createName}} } from "{{createPath}}";
+import { Field, InputType, Int, PartialType } from "@nestjs/graphql";
+import { IsEmail,  IsNotEmpty } from "class-validator";
+{{#fileImports}}{{> Import}}{{/fileImports}}
+
+{{> Entity}}

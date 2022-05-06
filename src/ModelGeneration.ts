@@ -31,10 +31,9 @@ export default function modelGenerationPhase(
     if (!generationOptions.noConfigs) {
         const tsconfigPath = path.resolve(resultPath, "tsconfig.json");
         const typeormConfigPath = path.resolve(resultPath, "ormconfig.json");
-
+        /*
         createTsConfigFile(tsconfigPath);
         createTypeOrmConfig(typeormConfigPath, connectionOptions);
-        /*
         entitiesPath = path.resolve(resultPath, "./entities");
         if (!fs.existsSync(entitiesPath)) {
             fs.mkdirSync(entitiesPath);
@@ -53,6 +52,9 @@ function generateResource(
     generationOptions: IGenerationOptions,
     resultPath: string
 ) {
+    const capitalizeFirstLetter = ([first, ...rest], locale = "sv") =>
+        first.toLocaleUpperCase(locale) + rest.join("");
+
     databaseModel.forEach((element) => {
         const resourcePath = getResourcePath(
             resultPath,
@@ -78,7 +80,18 @@ function generateResource(
             "service.spec"
         );
         createResource(resourcePath, element, generationOptions, "module");
-        createResource(resourcePath, element, generationOptions, "controller"); // make optional
+
+        // createResource(resourcePath, element, generationOptions, "controller"); // make optional
+        /*
+        console.log(
+            `import { ${capitalizeFirstLetter(
+                element.tscName
+            )}Module } from './${element.tscName}/${element.tscName}.module';`
+        );
+        */
+    });
+    databaseModel.forEach((element) => {
+        console.log(`${element.tscName}Module`);
     });
 }
 
@@ -102,31 +115,38 @@ function createDtos(
     element,
     generationOptions: IGenerationOptions
 ) {
+    const { tscName } = element;
+
+    element.createName = `Create ${tscName}Input`;
+
     const folderPath = path.resolve(resourcePath, "./dto");
     createFolder(folderPath);
 
-    const compliedTemplate = getCompliedTemplate("dto");
-    const rendered = compliedTemplate(element);
-    const withImportStatements = removeUnusedImports(
-        EOL !== eolConverter[generationOptions.convertEol]
-            ? rendered.replace(
-                  /(\r\n|\n|\r)/gm,
-                  eolConverter[generationOptions.convertEol]
-              )
-            : rendered
-    );
-    const formatted = prettify(withImportStatements, element);
+    let compliedTemplate = getCompliedTemplate("dto_create");
+    let rendered = compliedTemplate(element);
 
-    const fileName = getFileName(element, generationOptions);
+    let formatted = prettify(rendered, element);
+
+    let fileName = getFileName(element, generationOptions);
     const dtoCFilePath = path.resolve(
         folderPath,
         `create-${fileName}.input.ts`
     );
+    writeFile(dtoCFilePath, formatted);
+
+    element.updateName = `Update ${tscName}Input`;
+    element.createPath = `./create-${fileName}.input`;
+    compliedTemplate = getCompliedTemplate("dto_update");
+    rendered = compliedTemplate(element);
+
+    formatted = prettify(rendered, element);
+
+    fileName = getFileName(element, generationOptions);
+
     const dtoUFilePath = path.resolve(
         folderPath,
         `update-${fileName}.input.ts`
     );
-    writeFile(dtoCFilePath, formatted);
     writeFile(dtoUFilePath, formatted);
 }
 
@@ -365,6 +385,7 @@ function createHandlebarsHelpers(generationOptions: IGenerationOptions): void {
         }
         return retStr;
     });
+
     Handlebars.registerHelper("toFileName", (str) => {
         let retStr = "";
         switch (generationOptions.convertCaseFile) {

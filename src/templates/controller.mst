@@ -13,7 +13,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../auth/roles.guard';
 import { SkipAuth } from '../auth/auth.guard';
-import { constant } from 'src/commons/constant';
 
 @ApiTags('users')
 @ApiBearerAuth()

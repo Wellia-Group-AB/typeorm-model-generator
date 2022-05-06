@@ -1,8 +1,8 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { {{toEntityName tscName}}Service } from './{{tscName}}.service';
-import { {{toEntityName tscName}} } from './entities/{{tscName}}.entity';
-import { Create{{toEntityName tscName}}Input } from './dto/create-{{tscName}}.input';
-import { Update{{toEntityName tscName}}Input } from './dto/update-{{tscName}}.input';
+import { {{toEntityName tscName}}Service } from './{{toFileName tscName}}.service';
+import { {{toEntityName tscName}} } from './entities/{{toFileName tscName}}.entity';
+import { Create{{toEntityName tscName}}Input } from './dto/create-{{toFileName tscName}}.input';
+import { Update{{toEntityName tscName}}Input } from './dto/update-{{toFileName tscName}}.input';
 
 @Resolver(() => {{toEntityName tscName}})
 export class {{toEntityName tscName}}Resolver {
