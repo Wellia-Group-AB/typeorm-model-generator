@@ -222,12 +222,13 @@ export default class OracleDriver extends AbstractDriver {
                         options.length =
                             resp.DATA_LENGTH > 0 ? resp.DATA_LENGTH : undefined;
                     }
-
+                    const { name, length, unique, ...optionsDto } = options;
                     ent.columns.push({
                         generated,
                         type: columnType,
                         default: defaultValue,
                         options,
+                        optionsDto,
                         tscName,
                         tscType,
                     });
@@ -263,6 +264,7 @@ export default class OracleDriver extends AbstractDriver {
                 const indexInfo: Index = {
                     columns: [],
                     options: {},
+                    optionsDto: {},
                     name: records[0].INDEX_NAME,
                 };
                 if (records[0].ISPRIMARYKEY === 1) indexInfo.primary = true;

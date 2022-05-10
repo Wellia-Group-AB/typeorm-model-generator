@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { {{toEntityName tscName}}Service } from './{{toFileName tscName}}.service';
 import { {{toEntityName tscName}} } from './entities/{{toFileName tscName}}.entity';
 import { Create{{toEntityName tscName}}Input } from './dto/create-{{toFileName tscName}}.input';
@@ -19,7 +19,7 @@ export class {{toEntityName tscName}}Resolver {
   }
 
   @Query(() => {{toEntityName tscName}}, { name: '{{tscName}}' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.{{tscName}}Service.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class {{toEntityName tscName}}Resolver {
   }
 
   @Mutation(() => {{toEntityName tscName}})
-  remove{{toEntityName tscName}}(@Args('id', { type: () => Int }) id: number) {
+  remove{{toEntityName tscName}}(@Args('id', { type: () => String }) id: string) {
     return this.{{tscName}}Service.remove(id);
   }
 }

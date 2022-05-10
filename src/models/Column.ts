@@ -23,4 +23,16 @@ export type Column = {
         array?: boolean; // ?
         comment?: string;
     };
+    optionsDto: {
+        length?: number;
+        width?: number;
+        nullable?: boolean;
+        unique?: boolean; // ?
+        precision?: number;
+        scale?: number;
+        unsigned?: boolean;
+        enum?: string[];
+        array?: boolean; // ?
+        comment?: string;
+    };
 };

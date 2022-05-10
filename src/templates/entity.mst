@@ -4,8 +4,9 @@
 {{#*inline "Import"}}
 import {{localImport (toEntityName entityName)}} from '../../{{toFileName fileName}}/entities/{{toFileName fileName}}.entity'
 {{/inline}}
+
 {{#*inline "Column"}}
-@Field()
+@Field((type)=>{{toGrapqlType tscType}}, { {{json optionsDto}} })
 {{#generated}}@PrimaryGeneratedColumn({ type:"{{type}}", {{/generated}}{{^generated}}@Column("{{type}}",{ {{#primary}}primary:{{primary}},{{/primary}}{{/generated}}{{json options}}{{#default}},default: {{.}},{{/default}} })
 {{printPropertyVisibility}}{{toPropertyName tscName}}{{strictMode}}:{{tscType}}{{#if options.nullable}} | null{{/if}};
 
@@ -14,7 +15,7 @@ import {{localImport (toEntityName entityName)}} from '../../{{toFileName fileNa
 { name: "{{name}}", referencedColumnName: "{{toPropertyName referencedColumnName}}" },
 {{/inline}}
 {{#*inline "Relation"}}
-@Field((type) => [{{toEntityName relatedTable}}])
+@Field((type) => {{toGrapqlTypeToRelation (toEntityName relatedTable) relationType}})
 @{{relationType}}(()=>{{toEntityName relatedTable}},{{toPropertyName relatedTable}}=>{{toPropertyName relatedTable}}.{{toPropertyName relatedField}}{{#if relationOptions}},{ {{json relationOptions}} }{{/if}})
 {{#if joinColumnOptions}}@JoinColumn([{{#joinColumnOptions}}{{> JoinColumnOptions}}{{/joinColumnOptions}}]){{/if}}
 {{#joinTableOptions}}@JoinTable({ name:"{{name}}", joinColumns:[{{#joinColumns}}{{> JoinColumnOptions}}{{/joinColumns}}],inverseJoinColumns:[{{#inverseJoinColumns}}{{> JoinColumnOptions}}{{/inverseJoinColumns}}],{{#database}}database:"{{.}}",{{/database}}{{#schema}}schema:"{{.}}"{{/schema}} }){{/joinTableOptions}}

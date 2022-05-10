@@ -32,7 +32,7 @@ export const eolConverter = {
 
 export function getDefaultGenerationOptions(): IGenerationOptions {
     const generationOptions: IGenerationOptions = {
-        resultsPath: path.resolve(process.cwd(), "./output"),
+        resultsPath: path.resolve(process.cwd(), "../user-has-company/src"),
         pluralizeNames: true,
         noConfigs: false,
         convertCaseFile: "param",

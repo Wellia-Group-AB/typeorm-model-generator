@@ -65,6 +65,15 @@ function generateResource(
         createEntities(resourcePath, element, generationOptions);
         createDtos(resourcePath, element, generationOptions);
 
+        const repositoryPath = path.resolve(resourcePath, "./repository");
+        createFolder(repositoryPath);
+        createResource(
+            repositoryPath,
+            element,
+            generationOptions,
+            "repository"
+        );
+
         createResource(resourcePath, element, generationOptions, "resolver");
         createResource(
             resourcePath,
@@ -81,7 +90,10 @@ function generateResource(
         );
         createResource(resourcePath, element, generationOptions, "module");
 
-        // createResource(resourcePath, element, generationOptions, "controller"); // make optional
+        createResource(resourcePath, element, generationOptions, "controller"); // make optional
+
+        createResource(resourcePath, element, generationOptions, "module");
+
         /*
         console.log(
             `import { ${capitalizeFirstLetter(
@@ -431,6 +443,34 @@ function createHandlebarsHelpers(generationOptions: IGenerationOptions): void {
         }
         return retStr;
     });
+
+    Handlebars.registerHelper("toGrapqlType", (str) => {
+        let retStr = "";
+        switch (str) {
+            case "number":
+                retStr = "Int";
+                break;
+            case "float":
+                retStr = "Float";
+                break;
+            default:
+                retStr = "String";
+                break;
+        }
+        return retStr;
+    });
+
+    Handlebars.registerHelper(
+        "toGrapqlTypeToRelation",
+        (entityType: string, relationType: Relation["relationType"]) => {
+            let retVal = entityType;
+            if (relationType === "ManyToMany" || relationType === "OneToMany") {
+                retVal = `[${retVal}]`;
+            }
+            return retVal;
+        }
+    );
+
     Handlebars.registerHelper(
         "toRelation",
         (entityType: string, relationType: Relation["relationType"]) => {
