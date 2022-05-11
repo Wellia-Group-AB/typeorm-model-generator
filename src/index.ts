@@ -25,13 +25,13 @@ async function CliLogic() {
     let options = makeDefaultConfigs();
     const TOMLConfig = readTOMLConfig(options);
     options = TOMLConfig.options;
-    /*
+
     if (process.argv.length > 2) {
         options = checkYargsParameters(options);
     } else if (!TOMLConfig.fullConfigFile) {
         options = await useInquirer(options);
     }
-    */
+
     options = validateConfig(options);
     const driver = createDriver(options.connectionOptions.databaseType);
     console.log(

@@ -1,15 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { {{toEntityName tscName}} } from './entities/{{toFileName tscName}}.entity';
-import { Repository } from 'typeorm';
-import { AbstractService } from '../commons/abstract.service';
+import { AbstractService } from '../../commons/abstract.service';
+import { {{toEntityName tscName}}Repository } from './repository/{{toFileName tscName}}.repository';
+
+import { Create{{toEntityName tscName}}Input } from './dto/create-{{toFileName tscName}}.input';
+import { Update{{toEntityName tscName}}Input } from './dto/update-{{toFileName tscName}}.input';
 
 @Injectable()
 export class {{toEntityName tscName}}Service extends AbstractService {
   constructor(
-    @InjectRepository({{toEntityName tscName}})
-    private {{toEntityName tscName}}Repository: Repository<{{toEntityName tscName}}>,
+    @InjectRepository({{toEntityName tscName}}Repository)
+    private {{tscName}}Repository: {{toEntityName tscName}}Repository,
   ) {
-    super({{toEntityName tscName}}Repository);
+    super({{tscName}}Repository);
   }
+
+  async create(data:  Create{{toEntityName tscName}}Input): Promise<any> {
+    return await this.{{tscName}}Repository.save(data);
+  }
+  async update(id, data:  Update{{toEntityName tscName}}Input): Promise<any> {
+    return this.{{tscName}}Repository.update(id, data);
+  }
+
 }
