@@ -24,10 +24,10 @@ export default interface IConnectionOptions {
 export function getDefaultConnectionOptions(): IConnectionOptions {
     const connectionOptions: IConnectionOptions = {
         host: "localhost",
-        port: 5433,
-        databaseNames: ["scaffolding_tst"],
+        port: 5432,
+        databaseNames: ["snaptive"],
         user: "postgres",
-        password: "postgres",
+        password: "",
         databaseType: "postgres",
         schemaNames: ["public"],
         instanceName: undefined,

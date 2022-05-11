@@ -1,15 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
+import { {{toEntityName tscName}}Service } from './{{toFileName tscName}}.service';
+import { {{toEntityName tscName}}Resolver } from './{{toFileName tscName}}.resolver';
+import { {{toEntityName tscName}} } from './entities/{{toFileName tscName}}.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from '../auth/auth.module';
-import { AuthUser } from 'src/entities/auth-user';
-import { AuthUserSession } from 'src/entities/auth-user-session';
-import { UsersResolver } from './users.resolver';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuthUser, AuthUserSession]), AuthModule],
-  controllers: [UsersController],
-  providers: [UsersService, UsersResolver],
+  imports: [TypeOrmModule.forFeature([{{toEntityName tscName}}])],
+  providers: [{{toEntityName tscName}}Resolver, {{toEntityName tscName}}Service]
 })
-export class UsersModule {}
+export class {{toEntityName tscName}}Module {}

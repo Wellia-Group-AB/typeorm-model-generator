@@ -201,12 +201,13 @@ export default class PostgresDriver extends AbstractDriver {
                                 ? resp.character_maximum_length
                                 : undefined;
                     }
-
+                    const { name, length, unique, ...optionsDto } = options;
                     ent.columns.push({
                         generated,
                         type: columnType,
                         default: defaultValue,
                         options,
+                        optionsDto,
                         tscName,
                         tscType,
                     });
@@ -499,6 +500,7 @@ export default class PostgresDriver extends AbstractDriver {
                 const indexInfo: Index = {
                     columns: [],
                     options: {},
+                    optionsDto: {},
                     name: records[0].indexname,
                 };
                 if (records[0].is_primary_key === 1) indexInfo.primary = true;

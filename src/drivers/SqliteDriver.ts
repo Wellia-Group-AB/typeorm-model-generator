@@ -241,13 +241,14 @@ export default class SqliteDriver extends AbstractDriver {
                             10
                         );
                     }
-
+                    const { name, length, unique, ...optionsDto } = options;
                     ent.columns.push({
                         generated,
                         primary: isPrimary,
                         type: columnType,
                         default: defaultValue,
                         options,
+                        optionsDto,
                         tscName,
                         tscType,
                     });
@@ -280,6 +281,7 @@ export default class SqliteDriver extends AbstractDriver {
                             name: resp.name,
                             columns: [],
                             options: {},
+                            optionsDto: {},
                         };
                         if (resp.unique === 1) indexInfo.options.unique = true;
 

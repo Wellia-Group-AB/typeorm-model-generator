@@ -302,12 +302,13 @@ export default class MysqlDriver extends AbstractDriver {
                                 ? resp.CHARACTER_MAXIMUM_LENGTH
                                 : undefined;
                     }
-
+                    const { name, length, unique, ...optionsDto } = options;
                     ent.columns.push({
                         generated,
                         type: columnType,
                         default: defaultValue,
                         options,
+                        optionsDto,
                         tscName,
                         tscType,
                     });
@@ -350,6 +351,7 @@ export default class MysqlDriver extends AbstractDriver {
                     name: indexName,
                     columns: [],
                     options: {},
+                    optionsDto: {},
                 };
                 if (records[0].is_primary_key === 1) indexInfo.primary = true;
                 if (records[0].is_fulltext === 1)

@@ -256,11 +256,14 @@ export default class MssqlDriver extends AbstractDriver {
                                 ? resp.CHARACTER_MAXIMUM_LENGTH
                                 : undefined;
                     }
+
+                    const { name, length, unique, ...optionsDto } = options;
                     ent.columns.push({
                         generated,
                         type: columnType,
                         default: defaultValue,
                         options,
+                        optionsDto,
                         tscName,
                         tscType,
                     });
@@ -333,6 +336,7 @@ export default class MssqlDriver extends AbstractDriver {
                 const indexInfo: Index = {
                     columns: [],
                     options: {},
+                    optionsDto: {},
                     name: records[0].IndexName,
                 };
                 if (records[0].is_primary_key) indexInfo.primary = true;

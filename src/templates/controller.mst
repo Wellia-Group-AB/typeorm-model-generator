@@ -7,47 +7,42 @@ import {
   Param,
   Delete
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { {{toEntityName tscName}}Service } from './{{toFileName tscName}}.service';
+import { Create{{toEntityName tscName}}Input } from './dto/create-{{toFileName tscName}}.input';
+import { Update{{toEntityName tscName}}Input } from './dto/update-{{toFileName tscName}}.input';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../auth/roles.guard';
-import { SkipAuth } from '../auth/auth.guard';
-import { constant } from 'src/commons/constant';
 
-@ApiTags('users')
+@ApiTags('{{tscName}}')
 @ApiBearerAuth()
-@Controller('users')
-export class UsersController {
+@Controller('{{tscName}}')
+export class {{toEntityName tscName}}Controller {
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly {{tscName}}Service: {{toEntityName tscName}}Service) {}
 
-  @ApiBody({ type: CreateUserDto })
+  @ApiBody({ type: Create{{toEntityName tscName}}Input })
   @Post()
-  @Roles(constant.ROLE.ADMIN)
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  create(@Body() create{{toEntityName tscName}}Input: Create{{toEntityName tscName}}Input) {
+    return this.{{tscName}}Service.create(create{{toEntityName tscName}}Input);
   }
 
-  @SkipAuth()
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.{{tscName}}Service.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+    return this.{{tscName}}Service.findOne(id);
   }
 
-  @ApiBody({ type: UpdateUserDto })
+  @ApiBody({ type: Update{{toEntityName tscName}}Input })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  update(@Param('id') id: string, @Body() update{{toEntityName tscName}}Input: Update{{toEntityName tscName}}Input) {
+    return this.{{tscName}}Service.update(id, update{{toEntityName tscName}}Input);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+    return this.{{tscName}}Service.remove(id);
   }
 }
