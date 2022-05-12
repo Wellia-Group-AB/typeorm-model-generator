@@ -13,12 +13,12 @@ export class {{toEntityName tscName}}Resolver {
     return this.{{tscName}}Service.create(create{{toEntityName tscName}}Input);
   }
 
-  @Query(() => [{{toEntityName tscName}}], { name: '{{tscName}}' })
+  @Query(() => [{{toEntityName tscName}}], { name: 'getAll{{toEntityName tscName}}' })
   findAll() {
     return this.{{tscName}}Service.findAll();
   }
 
-  @Query(() => {{toEntityName tscName}}, { name: '{{tscName}}' })
+  @Query(() => {{toEntityName tscName}}, { name: 'get{{toEntityName tscName}}' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.{{tscName}}Service.findOne(id);
   }
