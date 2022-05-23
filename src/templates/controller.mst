@@ -10,10 +10,10 @@ import {
 import { {{toEntityName tscName}}Service } from './{{toFileName tscName}}.service';
 import { Create{{toEntityName tscName}}Input } from './dto/create-{{toFileName tscName}}.input';
 import { Update{{toEntityName tscName}}Input } from './dto/update-{{toFileName tscName}}.input';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('{{tscName}}')
-@ApiBearerAuth()
+@ApiBasicAuth()
 @Controller('{{tscName}}')
 export class {{toEntityName tscName}}Controller {
 

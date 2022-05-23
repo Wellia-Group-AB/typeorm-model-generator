@@ -3,10 +3,12 @@ import { {{toEntityName tscName}}Service } from './{{toFileName tscName}}.servic
 import { {{toEntityName tscName}}Resolver } from './{{toFileName tscName}}.resolver';
 import { {{toEntityName tscName}}Repository } from './repository/{{toFileName tscName}}.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ResponseMsgService } from "../../commons";
 
 @Module({
   imports: [TypeOrmModule.forFeature([{{toEntityName tscName}}Repository])],
-  providers: [{{toEntityName tscName}}Resolver, {{toEntityName tscName}}Service],
-  exports: [TypeOrmModule, {{toEntityName tscName}}Service]
+  // controllers: [{{toEntityName tscName}}Controller],
+  providers: [{{toEntityName tscName}}Resolver, {{toEntityName tscName}}Service, ResponseMsgService],
+  exports: [TypeOrmModule, {{toEntityName tscName}}Service, ResponseMsgService]
 })
 export class {{toEntityName tscName}}Module {}
