@@ -3,6 +3,11 @@
 {{#*inline "Import"}}
 {{/inline}}
 {{#*inline "Column"}}
+
+{{#if primary}}
+@Field((type)=>{{toGrapqlType tscType}}, { {{json optionsDto}} })
+{{printPropertyVisibility}}{{toPropertyName tscName}}{{strictMode}}:{{tscType}}{{#if options.nullable}} | null{{/if}};
+{{/if}}
 {{/inline}}
 {{#*inline "Relation"}}
 {{/inline}}

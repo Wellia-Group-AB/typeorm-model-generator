@@ -8,8 +8,10 @@
 {{/inline}}
 {{#*inline "Column"}}
 
+{{#unless primary}}
 @Field((type)=>{{toGrapqlType tscType}}, { {{json optionsDto}} })
 {{printPropertyVisibility}}{{toPropertyName tscName}}{{strictMode}}:{{tscType}}{{#if options.nullable}} | null{{/if}};
+{{/unless}}
 {{/inline}}
 
 {{#*inline "Relation"}}
