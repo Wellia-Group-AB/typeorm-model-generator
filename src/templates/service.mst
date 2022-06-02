@@ -13,16 +13,16 @@ import { Update{{toEntityName tscName}}Input } from './dto/update-{{toFileName t
 export class {{toEntityName tscName}}Service extends AbstractService {
   constructor(
     @InjectRepository({{toEntityName tscName}}Repository)
-    private {{tscName}}Repository: {{toEntityName tscName}}Repository,
+    private {{camelCase tscName}}Repository: {{toEntityName tscName}}Repository,
     private responseMsgService : ResponseMsgService
   ) {
-    super({{tscName}}Repository);
+    super({{camelCase tscName}}Repository);
   }
 
   async create(data:  Create{{toEntityName tscName}}Input, relations: string[] = null): Promise<{{toEntityName tscName}}> {
-    const entity = await this.{{tscName}}Repository.create(data);
+    const entity = await this.{{camelCase tscName}}Repository.create(data);
     entity.id = uuidv4();  
-    const res = await this.{{tscName}}Repository.save(entity);
+    const res = await this.{{camelCase tscName}}Repository.save(entity);
     if(res.id){
       this.responseMsgService.addSuccessMsg({message: "Inserted successfully"})
       return await this.findOne(res.id, relations);
@@ -33,7 +33,7 @@ export class {{toEntityName tscName}}Service extends AbstractService {
   }
 
   async update(id, data:  Update{{toEntityName tscName}}Input, relations: string[] = null): Promise<{{toEntityName tscName}}> {
-    const res = await this.{{tscName}}Repository.update(id, data);
+    const res = await this.{{camelCase tscName}}Repository.update(id, data);
     if(res && res.affected > 0){
       this.responseMsgService.addSuccessMsg({message: "Updated successfully"})
       return await this.findOne(id,relations);

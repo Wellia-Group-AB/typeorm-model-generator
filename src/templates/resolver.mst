@@ -7,34 +7,34 @@ import { getAllRelations } from "../../commons";
 
 @Resolver(() => {{toEntityName tscName}})
 export class {{toEntityName tscName}}Resolver {
-  constructor(private readonly {{tscName}}Service: {{toEntityName tscName}}Service) {}
+  constructor(private readonly {{camelCase tscName}}Service: {{toEntityName tscName}}Service) {}
 
   // @Query(() => [{{toEntityName tscName}}], { name: 'getAll{{toEntityName tscName}}' })
   findAll(@Info() info) {
     const relations = getAllRelations(info);
-    return this.{{tscName}}Service.findAll(relations);
+    return this.{{camelCase tscName}}Service.findAll(relations);
   }
 
   // @Query(() => {{toEntityName tscName}}, { name: 'get{{toEntityName tscName}}' })
   findOne(@Args('id', { type: () => String }) id: string, @Info() info) {
     const relations = getAllRelations(info);
-    return this.{{tscName}}Service.findOne(id, relations);
+    return this.{{camelCase tscName}}Service.findOne(id, relations);
   }
 
   // @Mutation(() => {{toEntityName tscName}}, {nullable: true})
   create{{toEntityName tscName}}(@Args('create{{toEntityName tscName}}Input') create{{toEntityName tscName}}Input: Create{{toEntityName tscName}}Input, @Info() info) {
     const relations = getAllRelations(info);
-    return this.{{tscName}}Service.create(create{{toEntityName tscName}}Input, relations);
+    return this.{{camelCase tscName}}Service.create(create{{toEntityName tscName}}Input, relations);
   }
 
   // @Mutation(() => {{toEntityName tscName}}, {nullable: true})
   update{{toEntityName tscName}}(@Args('update{{toEntityName tscName}}Input') update{{toEntityName tscName}}Input: Update{{toEntityName tscName}}Input, @Info() info) {
     const relations = getAllRelations(info);
-    return this.{{tscName}}Service.update(update{{toEntityName tscName}}Input.id, update{{toEntityName tscName}}Input, relations);
+    return this.{{camelCase tscName}}Service.update(update{{toEntityName tscName}}Input.id, update{{toEntityName tscName}}Input, relations);
   }
 
   // @Mutation(() => {{toEntityName tscName}})
   remove{{toEntityName tscName}}(@Args('id', { type: () => String }) id: string) {
-    return this.{{tscName}}Service.remove(id);
+    return this.{{camelCase tscName}}Service.remove(id);
   }
 }

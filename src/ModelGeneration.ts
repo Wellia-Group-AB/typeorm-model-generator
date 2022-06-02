@@ -398,6 +398,10 @@ function createHandlebarsHelpers(generationOptions: IGenerationOptions): void {
         return retStr;
     });
 
+    Handlebars.registerHelper("camelCase", (str) => {
+        return changeCase.camelCase(str);
+    });
+
     Handlebars.registerHelper("toFileName", (str) => {
         let retStr = "";
         switch (generationOptions.convertCaseFile) {

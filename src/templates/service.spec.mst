@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { {{toEntityName tscName}}Service } from './{{toFileName tscName}}.service';
 
 describe('{{toEntityName tscName}}Service', () => {
-  let service: UserService;
+  let service: {{toEntityName tscName}}Service;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

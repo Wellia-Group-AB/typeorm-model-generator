@@ -17,32 +17,32 @@ import { ApiBasicAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 @Controller('{{tscName}}')
 export class {{toEntityName tscName}}Controller {
 
-  constructor(private readonly {{tscName}}Service: {{toEntityName tscName}}Service) {}
+  constructor(private readonly {{camelCase tscName}}Service: {{toEntityName tscName}}Service) {}
 
   @ApiBody({ type: Create{{toEntityName tscName}}Input })
   @Post()
   create(@Body() create{{toEntityName tscName}}Input: Create{{toEntityName tscName}}Input) {
-    return this.{{tscName}}Service.create(create{{toEntityName tscName}}Input);
+    return this.{{camelCase tscName}}Service.create(create{{toEntityName tscName}}Input);
   }
 
   @Get()
   findAll() {
-    return this.{{tscName}}Service.findAll();
+    return this.{{camelCase tscName}}Service.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.{{tscName}}Service.findOne(id);
+    return this.{{camelCase tscName}}Service.findOne(id);
   }
 
   @ApiBody({ type: Update{{toEntityName tscName}}Input })
   @Patch(':id')
   update(@Param('id') id: string, @Body() update{{toEntityName tscName}}Input: Update{{toEntityName tscName}}Input) {
-    return this.{{tscName}}Service.update(id, update{{toEntityName tscName}}Input);
+    return this.{{camelCase tscName}}Service.update(id, update{{toEntityName tscName}}Input);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.{{tscName}}Service.remove(id);
+    return this.{{camelCase tscName}}Service.remove(id);
   }
 }
