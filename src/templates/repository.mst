@@ -1,5 +1,4 @@
 import { {{toEntityName tscName}} } from '../entities/{{toFileName tscName}}.entity';
-import { EntityRepository, Repository } from 'typeorm';
+import { dataSource } from "../../../core/datasource";
 
-@EntityRepository({{toEntityName tscName}})
-export class {{toEntityName tscName}}Repository extends Repository<{{toEntityName tscName}}> {}
+export const {{tscName}}Repository = dataSource.getRepository({{toEntityName tscName}})
