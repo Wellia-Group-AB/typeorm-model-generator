@@ -34,7 +34,7 @@ export class {{toEntityName tscName}}Service extends AbstractService {
     const res = await {{camelCase tscName}}Repository.update(id, data);
     if(res && res.affected > 0){
       this.responseMsgService.addSuccessMsg({message: "Updated successfully"})
-      return await this.findOne({where:{id:res.id}, relations:relations});
+      return await this.findOne({where:{id}, relations:relations});
     }else{
       this.responseMsgService.addWarningMsg({message: "Failed to update"})
       throw new NotFoundException(generateError('UpdateAuthUserInput', 'id', 'Failed to update'))
