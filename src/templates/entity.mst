@@ -37,7 +37,7 @@ import {{localImport (toEntityName entityName)}} from '../../{{toFileName fileNa
 {{#indices}}{{> Index}}{{/indices~}}
 @Entity("{{sqlName}}"{{#schema}} ,{schema:"{{.}}"{{#if ../database}}, database:"{{../database}}"{{/if}} } {{/schema}})
 @ObjectType()
-export {{defaultExport}} class {{toEntityName tscName}}{{#activeRecord}} extends BaseEntity{{/activeRecord}} {
+export {{defaultExport}} class {{toEntityName tscName}} extends ResponseObject {{#activeRecord}} BaseEntity{{/activeRecord}} {
 
 {{#columns}}{{> Column}}{{/columns~}}
 {{#relations}}{{> Relation}}{{/relations~}}
@@ -47,6 +47,7 @@ export {{defaultExport}} class {{toEntityName tscName}}{{#activeRecord}} extends
 {{/inline}}
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
 import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { ResponseObject } from "../../../commons";
 {{#fileImports}}{{> Import}}{{/fileImports}}
 
 {{> Entity}}

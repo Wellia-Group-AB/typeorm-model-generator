@@ -1,35 +1,40 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Info } from '@nestjs/graphql';
 import { {{toEntityName tscName}}Service } from './{{toFileName tscName}}.service';
 import { {{toEntityName tscName}} } from './entities/{{toFileName tscName}}.entity';
 import { Create{{toEntityName tscName}}Input } from './dto/create-{{toFileName tscName}}.input';
 import { Update{{toEntityName tscName}}Input } from './dto/update-{{toFileName tscName}}.input';
+import { getAllRelations } from "../../commons";
 
 @Resolver(() => {{toEntityName tscName}})
 export class {{toEntityName tscName}}Resolver {
-  constructor(private readonly {{tscName}}Service: {{toEntityName tscName}}Service) {}
+  constructor(private readonly {{camelCase tscName}}Service: {{toEntityName tscName}}Service) {}
 
-  @Mutation(() => {{toEntityName tscName}})
-  create{{toEntityName tscName}}(@Args('create{{toEntityName tscName}}Input') create{{toEntityName tscName}}Input: Create{{toEntityName tscName}}Input) {
-    return this.{{tscName}}Service.create(create{{toEntityName tscName}}Input);
+  // @Query(() => [{{toEntityName tscName}}], { name: 'getAll{{toEntityName tscName}}' })
+  findAll(@Info() info) {
+    const relations = getAllRelations(info);
+    return this.{{camelCase tscName}}Service.findAll(relations);
   }
 
-  @Query(() => [{{toEntityName tscName}}], { name: '{{tscName}}' })
-  findAll() {
-    return this.{{tscName}}Service.findAll();
+  // @Query(() => {{toEntityName tscName}}, { name: 'get{{toEntityName tscName}}' })
+  findOne(@Args('id', { type: () => String }) id: string, @Info() info) {
+    const relations = getAllRelations(info);
+    return this.{{camelCase tscName}}Service.findOne(id, relations);
   }
 
-  @Query(() => {{toEntityName tscName}}, { name: '{{tscName}}' })
-  findOne(@Args('id', { type: () => String }) id: string) {
-    return this.{{tscName}}Service.findOne(id);
+  // @Mutation(() => {{toEntityName tscName}}, {nullable: true})
+  create{{toEntityName tscName}}(@Args('create{{toEntityName tscName}}Input') create{{toEntityName tscName}}Input: Create{{toEntityName tscName}}Input, @Info() info) {
+    const relations = getAllRelations(info);
+    return this.{{camelCase tscName}}Service.create(create{{toEntityName tscName}}Input, relations);
   }
 
-  @Mutation(() => {{toEntityName tscName}})
-  update{{toEntityName tscName}}(@Args('update{{toEntityName tscName}}Input') update{{toEntityName tscName}}Input: Update{{toEntityName tscName}}Input) {
-    return this.{{tscName}}Service.update(update{{toEntityName tscName}}Input.id, update{{toEntityName tscName}}Input);
+  // @Mutation(() => {{toEntityName tscName}}, {nullable: true})
+  update{{toEntityName tscName}}(@Args('update{{toEntityName tscName}}Input') update{{toEntityName tscName}}Input: Update{{toEntityName tscName}}Input, @Info() info) {
+    const relations = getAllRelations(info);
+    return this.{{camelCase tscName}}Service.update(update{{toEntityName tscName}}Input.id, update{{toEntityName tscName}}Input, relations);
   }
 
-  @Mutation(() => {{toEntityName tscName}})
+  // @Mutation(() => {{toEntityName tscName}})
   remove{{toEntityName tscName}}(@Args('id', { type: () => String }) id: string) {
-    return this.{{tscName}}Service.remove(id);
+    return this.{{camelCase tscName}}Service.remove(id);
   }
 }
