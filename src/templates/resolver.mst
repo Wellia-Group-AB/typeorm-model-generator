@@ -18,7 +18,7 @@ export class {{toEntityName tscName}}Resolver {
   // @Query(() => {{toEntityName tscName}}, { name: 'get{{toEntityName tscName}}' })
   findOne(@Args('id', { type: () => String }) id: string, @Info() info) {
     const relations = getAllRelations(info);
-    return this.{{camelCase tscName}}Service.findOne(id, relations);
+    return this.{{camelCase tscName}}Service.findOne({where: {id},relations:relations});
   }
 
   // @Mutation(() => {{toEntityName tscName}}, {nullable: true})

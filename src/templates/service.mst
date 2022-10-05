@@ -1,7 +1,7 @@
 import { Injectable, NotAcceptableException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { AbstractService } from '../../commons/abstract.service';
-import { {{toEntityName tscName}}Repository } from './repository/{{toFileName tscName}}.repository';
+import { {{tscName}}Repository } from './repository/{{toFileName tscName}}.repository';
 import { {{toEntityName tscName}} } from "./entities/{{toFileName tscName}}.entity";
 import { generateError, ResponseMsgService } from "src/commons";
 import {v4 as uuidv4} from 'uuid';
@@ -12,20 +12,18 @@ import { Update{{toEntityName tscName}}Input } from './dto/update-{{toFileName t
 @Injectable()
 export class {{toEntityName tscName}}Service extends AbstractService {
   constructor(
-    @InjectRepository({{toEntityName tscName}}Repository)
-    private {{camelCase tscName}}Repository: {{toEntityName tscName}}Repository,
     private responseMsgService : ResponseMsgService
   ) {
     super({{camelCase tscName}}Repository);
   }
 
   async create(data:  Create{{toEntityName tscName}}Input, relations: string[] = null): Promise<{{toEntityName tscName}}> {
-    const entity = await this.{{camelCase tscName}}Repository.create(data);
+    const entity = await {{camelCase tscName}}Repository.create(data);
     entity.id = uuidv4();  
-    const res = await this.{{camelCase tscName}}Repository.save(entity);
+    const res = await {{camelCase tscName}}Repository.save(entity);
     if(res.id){
       this.responseMsgService.addSuccessMsg({message: "Inserted successfully"})
-      return await this.findOne(res.id, relations);
+      return await this.findOne({where:{id:res.id}, relations:relations});
     }else{
       this.responseMsgService.addWarningMsg({message: "Failed to insert"})
       throw new NotAcceptableException(generateError('CreateAuthUserInput', 'id', 'Failed to insert'))
@@ -33,10 +31,10 @@ export class {{toEntityName tscName}}Service extends AbstractService {
   }
 
   async update(id, data:  Update{{toEntityName tscName}}Input, relations: string[] = null): Promise<{{toEntityName tscName}}> {
-    const res = await this.{{camelCase tscName}}Repository.update(id, data);
+    const res = await {{camelCase tscName}}Repository.update(id, data);
     if(res && res.affected > 0){
       this.responseMsgService.addSuccessMsg({message: "Updated successfully"})
-      return await this.findOne(id,relations);
+      return await this.findOne({where:{id}, relations:relations});
     }else{
       this.responseMsgService.addWarningMsg({message: "Failed to update"})
       throw new NotFoundException(generateError('UpdateAuthUserInput', 'id', 'Failed to update'))

@@ -32,7 +32,7 @@ export class {{toEntityName tscName}}Controller {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.{{camelCase tscName}}Service.findOne(id);
+    return this.{{camelCase tscName}}Service.findOne({where:{id}});
   }
 
   @ApiBody({ type: Update{{toEntityName tscName}}Input })
